@@ -1,0 +1,12 @@
+1.Web Service 專案新增方式
+加入 -> 新增專案 -> Visual C# 底下 -> WCF -> WCF服務應用程式
+2.一般的函示庫
+加入 -> 新增專案 -> 點集Visual C# -> 類別庫(.NET Framework)
+這一個類別庫才能新增WebService
+3.標準的函示庫
+加入 -> 新增專案 -> 點集Visual C# -> 類別庫(.NET Standard)
+這一個類別庫只能用一般功能
+
+AppConfig讓專案自己生，不要手動去新增
+
+本專案是呼叫Wcf時，用帳號密碼做驗證(ConsoleApp1)
