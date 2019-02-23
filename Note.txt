@@ -10,3 +10,12 @@
 AppConfig讓專案自己生，不要手動去新增
 
 本專案是呼叫Wcf時，用帳號密碼做驗證(ConsoleApp1)
+
+操作流程
+先去新增憑證
+用目錄底下 SelfCert -> SelfCert.exe
+看Word
+PeopleService.Service Server
+
+
+ConsoleApp1           Client
