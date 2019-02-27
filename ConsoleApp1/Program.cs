@@ -12,8 +12,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             PeopleServiceClient client = new PeopleServiceClient();
-            //client.ClientCredentials.UserName.UserName = "peoplesite";
-            //client.ClientCredentials.UserName.Password = "password";
+            // 帳號密碼
             client.ClientCredentials.UserName.UserName = "peoplesite123";
             client.ClientCredentials.UserName.Password = "password";
 

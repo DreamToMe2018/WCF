@@ -15,7 +15,67 @@ AppConfig讓專案自己生，不要手動去新增
 先去新增憑證
 用目錄底下 SelfCert -> SelfCert.exe
 看Word
+一定要用SSL跑
 PeopleService.Service Server
-
+設定黨要改
+  <system.serviceModel>
+    <services>
+      <service name="PeopleService.Service.PeopleService" behaviorConfiguration="ServiceBehaviour">
+        <host>
+          <baseAddresses>
+            <add baseAddress="https://localhost:44390/" />   自己SSL的WCF網址
+          </baseAddresses>
+        </host>
+        <endpoint address="https://localhost:44390/PeopleService.svc" binding="wsHttpBinding" bindingConfiguration="BasicBinding" contract="PeopleService.Service.IPeopleService" name="BasicEndpoint" />
+		https://localhost:44390/PeopleService.svc WCF wsHttpBinding 跑SSL要打這個 BasicBinding 跟下面的對應 PeopleService.Service.IPeopleService 介面的路徑，namespace 要打對
+      </service>
+    </services>
+    <bindings>
+      <wsHttpBinding>
+        <binding name="BasicBinding">
+          <security mode="TransportWithMessageCredential">
+            <message clientCredentialType="UserName" />
+          </security>
+        </binding>
+      </wsHttpBinding>
+	  要包在wsHttpBinding裡面 BasicBinding跟上面對應 TransportWithMessageCredential跟UserName都不變
+    </bindings>
+    <behaviors>
+      <serviceBehaviors>
+        <behavior name="ServiceBehaviour">
+          <serviceMetadata httpGetEnabled="true" httpsGetEnabled="true" />
+          <serviceDebug includeExceptionDetailInFaults="true" />
+          <serviceCredentials>
+            <userNameAuthentication userNamePasswordValidationMode="Custom" customUserNamePasswordValidatorType="PeopleService.Service.Authenticator, PeopleService.Service" />
+            <serviceCertificate findValue="WcfTest" storeLocation="LocalMachine" storeName="My" x509FindType="FindBySubjectName" />
+          </serviceCredentials>
+		  這一塊是帳號密碼驗證
+		  PeopleService.Service.Authenticator, PeopleService.Service 前面是方法 後面是專案
+		  WcfTest 剛剛註冊的憑證名稱 LocalMachine剛註冊時預設的 My剛註冊時預設的 FindBySubjectName剛註冊時預設的
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+  </system.serviceModel>
 
 ConsoleApp1           Client
+設定黨要改
+  <system.serviceModel>
+        <bindings>
+            <wsHttpBinding>
+                <binding name="BasicEndpoint">
+                    <security mode="TransportWithMessageCredential">
+                        <transport clientCredentialType="None" />
+                        <message clientCredentialType="UserName" />
+                    </security>
+                </binding>
+            </wsHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="https://localhost:44390/PeopleService.svc"
+                binding="wsHttpBinding" bindingConfiguration="BasicEndpoint"
+                contract="ServiceReference1.IPeopleService" name="BasicEndpoint" />
+        </client>
+		wsHttpBinding 跟 client 都要設定
+    </system.serviceModel>
+
+	在Program會輸入帳號密碼做驗證，有通過才可以呼叫WCF
